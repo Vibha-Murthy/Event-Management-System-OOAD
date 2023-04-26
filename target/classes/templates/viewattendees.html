@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #cccccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        a {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+		.navbar {
+    background-color: #4CAF50;
+    overflow: hidden;
+    padding: 8px 16px;
+}
+
+		.navbar a {
+			float: left;
+			display: block;
+			color: white;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+			font-size: 17px;
+		}
+
+		.navbar a:hover {
+			background-color: #45a049;
+		}
+    </style> -->
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0px auto;
+            padding: 30px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 50px;
+            color: #B46060;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            text-align: left;
+            margin-top: 20px;
+            margin-bottom: 25px;
+            margin-left: -20px;
+            width: 800px;
+
+        }
+
+        a {
+            display: inline-block;
+            color: black;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button{
+            border-radius: 8px;
+            background-color: #F3E99F;
+        }
+
+        .navbar {
+            margin-top: -40px;
+            width: 100%;
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: -10px;
+            color: #393646;
+    overflow: hidden;
+    padding: 12px 16px;
+}
+
+.navbar a {
+    float: right;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 16px 12px 16px 6px;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.navbar a:hover {
+    color: yellow;
+}
+.heroimg{
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    background-position: center;
+    background-size: cover;
+    opacity: 0.5;
+}
+.logo{
+    position: absolute;
+    float: left;
+    margin-top:16px;
+    margin-left: -700px;
+    width:40px;
+    height: 40px;
+}
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding:2px;
+    margin: auto;
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+  }
+  
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+    background-color: #FFF3E2;
+    text-align: center;
+    flex:1;
+  }
+  
+  .card img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 50%;
+  }
+  
+  .card h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #cccccc;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+    </style>
+
+
+</head>
+<body>
+    <img class="heroimg" alt="hero" src="https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_960_720.jpg">
+    <div class="container">
+		<div class="navbar">
+			<a href="/"style="font-weight:bold">Home</a>
+		</div>
+        <div class="card-container">
+        <div class="card">
+        <h1>All Attendees</h1>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Phone No.</th>
+                <th>Event Name</th>
+              
+            <tr th:each="b : ${allattendees}">
+                <td th:text="${b.name}"></td>
+                <td th:text="${b.phno}"></td>
+                <td th:text="${b.eventname}"></td>
+              
+            </tr>
+        </table>
+    </div></div>
+    </div>
+</body>
+</html>
