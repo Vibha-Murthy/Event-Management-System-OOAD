@@ -1,5 +1,4 @@
 package com.example.mvceventtracker;
-
 import java.util.List;
 // import org.springframework.web.servlet.ModelAndView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class EventController {
 	public MongoRepo2 repo2;
 	@Autowired
 	public MongoRepo3 repo3;
-
+	
 
 
 	@GetMapping("/")
@@ -57,6 +56,8 @@ public class EventController {
 		return "attendee";
 	}
 
+
+	//EVENT FUNCTIONS
 	@GetMapping("/viewevents")
 	public String viewEvents(Model model) {
 		List<Event> events = repo.findAll();
@@ -72,44 +73,30 @@ public class EventController {
 		return "vieweventothers";
 	}
 	
-	@GetMapping("/viewproductothers")
-	public String viewProductOthers(Model model) {
-		List<Event> products = repo.findAll();
-		model.addAttribute("allproducts",products);
-		return "viewproductothers";
-	}
+	// @GetMapping("/addevent")
+	// public String addEvent(Model model) {
+	// 	model.addAttribute("event",new Event());
+	// 	return "addevent";
+	// }
 
-	@GetMapping("/addevent")
-	public String addEvent(Model model) {
-		model.addAttribute("event",new Event());
-		return "addevent";
-	}
-
-	@PostMapping("/addevent")
-	public String submitEvent(@ModelAttribute("event") Event event) {
-		repo.save(event);
-		return "redirect:viewevents";
-	}
-
-	@GetMapping("/viewproducts")
-	public String viewProducts(Model model) {
-		List<Product> products = repo1.findAll();
-		model.addAttribute("allproducts",products);
-		return "viewproducts";
-	}
+	// @PostMapping("/addevent")
+	// public String submitEvent(@ModelAttribute("event") Event event) {
+	// 	repo.save(event);
+	// 	return "redirect:viewevents";
+	// }
 	
-	@GetMapping("/addproduct")
-	public String addProduct(Model model) {
-		model.addAttribute("product",new Product());
-		return "addproduct";
-	}
+	@GetMapping("/addevent")
+    public String addEvent(Model model) {
+        model.addAttribute("event", ObjectFactory.createObject("event"));
+        return "addevent";
+    }
 
-	@PostMapping("/addproduct")
-	public String submitProduct(@ModelAttribute("product") Product product) {
-		repo1.save(product);
-		return "redirect:viewproducts";
-	}
-
+    @PostMapping("/addevent")
+    public String submitEvent(@ModelAttribute("event") Event event) {
+        repo.save(event);
+        return "redirect:viewevents";
+    }
+	
 	@GetMapping("/updateevent/{id}")
 	public String showUpdateFormEvent(@PathVariable("id") String id, Model model) {
     Event event = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid event Id: " + id));
@@ -122,6 +109,59 @@ public class EventController {
     repo.save(event);
     return "redirect:viewevents";
 	}
+
+	@GetMapping("/deleteevent")
+    public String deleteEvent(Model model) {
+        model.addAttribute("event", new Event());
+        return "deleteevent";
+    }
+
+    @PostMapping("/deleteevent")
+    public String deleteEvent(@ModelAttribute("event") Event event, Model model) {
+        repo.deleteByName(event.getName());
+        model.addAttribute("message", "Product deleted successfully");
+        return "redirect:viewevents";
+    }
+
+	//PRODUCT FUNCTIONS
+	@GetMapping("/viewproducts")
+	public String viewProducts(Model model) {
+		List<Product> products = repo1.findAll();
+		model.addAttribute("allproducts",products);
+		return "viewproducts";
+	}
+	
+	@GetMapping("/viewproductothers")
+	public String viewProductOthers(Model model) {
+		List<Event> products = repo.findAll();
+		model.addAttribute("allproducts",products);
+		return "viewproductothers";
+	}
+
+	// @GetMapping("/addproduct")
+	// public String addProduct(Model model) {
+	// 	model.addAttribute("product",new Product());
+	// 	return "addproduct";
+	// }
+
+	// @PostMapping("/addproduct")
+	// public String submitProduct(@ModelAttribute("product") Product product) {
+	// 	repo1.save(product);
+	// 	return "redirect:viewproducts";
+	// }
+
+	@GetMapping("/addproduct")
+    public String addProduct(Model model) {
+        model.addAttribute("event", ObjectFactory.createObject("product"));
+        return "addproduct";
+    }
+
+    @PostMapping("/addproduct")
+    public String submitProduct(@ModelAttribute("product") Product product) {
+        repo1.save(product);
+        return "redirect:viewproducts";
+    }
+
 
 	@GetMapping("/updateproduct/{id}")
 	public String showUpdateFormProduct(@PathVariable("id") String id, Model model) {
@@ -149,19 +189,7 @@ public class EventController {
         return "redirect:viewproducts";
     }
 
-	@GetMapping("/deleteevent")
-    public String deleteEvent(Model model) {
-        model.addAttribute("event", new Event());
-        return "deleteevent";
-    }
-
-    @PostMapping("/deleteevent")
-    public String deleteEvent(@ModelAttribute("event") Event event, Model model) {
-        repo.deleteByName(event.getName());
-        model.addAttribute("message", "Product deleted successfully");
-        return "redirect:viewevents";
-    }
-
+	//ATTENDEE FUNCTIONS
 	
 	@GetMapping("/viewattendees")
 	public String viewAttendees(Model model) {
@@ -176,9 +204,10 @@ public class EventController {
 	// 	model.addAttribute("attendee", new Attendee());
 	// 	return "addattendee";
 	// }
+
 	@GetMapping("/addattendee")
 	public String addAttendee(Model model) {
-		model.addAttribute("attendee", new Attendee());
+		model.addAttribute("attendee",ObjectFactory.createObject("attendee"));
 		List<Event> events = repo.findAll();
     	model.addAttribute("events", events);
 		return "addattendee";
@@ -203,7 +232,8 @@ public class EventController {
         return "redirect:viewattendees";
     }
 
-	
+	//SPEAKER FUNCTIONS
+
 	@GetMapping("/viewspeakers")
 	public String viewSpeakers(Model model) {
 		List<Speaker> speakers = repo3.findAll();
@@ -213,15 +243,16 @@ public class EventController {
 	
 	@GetMapping("/addspeaker")
 	public String addSpeaker(Model model) {
-		model.addAttribute("speaker", new Speaker());
+		model.addAttribute("speaker", ObjectFactory.createObject("speaker"));
 		return "addspeaker";
 	}
-// 
+	
 	// @PostMapping("/addspeaker")
 	// public String submitSpeaker(@ModelAttribute("speaker") Speaker speaker) {
 	// 	repo3.save(speaker);
 	// 	return "redirect:viewspeakers";
 	// }
+
 	@PostMapping("/addspeaker")
 	public String submitSpeaker(@ModelAttribute("speaker") Speaker speaker, @RequestParam("audio") MultipartFile audioFile) {
 		// Save the audio file to the local directory
@@ -243,22 +274,6 @@ public class EventController {
 		repo3.save(speaker);
 		return "redirect:viewspeakers";
 	}
-	
-
-// 
-	// @GetMapping("/deletespeaker")
-    // public String deleteSpeaker(Model model) {
-    //     model.addAttribute("speaker", new Speaker());
-    //     return "deletespeaker";
-    // }
-
-    // @PostMapping("/deletespeaker")
-    // public String deleteSpeaker(@ModelAttribute("speaker") Speaker speaker, Model model) {
-    //     repo3.deleteByName(speaker.getName());
-    //     model.addAttribute("message", "Item deleted successfully");
-    //     return "redirect:viewspeakers";
-    // }
-	//vidisha is a cutie. so is vibha. cutiessssssss.
 
 }
 
